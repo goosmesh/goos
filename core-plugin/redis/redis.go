@@ -138,6 +138,12 @@ func (redis *Redis) A(name string, z *Zone, record *Record) (answers, extras []d
 		r.A = a.Ip
 		answers = append(answers, r)
 	}
+
+	// support service discovery
+	r, e := redis.SRV(name, z, record)
+	answers = append(answers, r...)
+	extras = append(extras, e...)
+
 	return
 }
 
@@ -152,6 +158,12 @@ func (redis Redis) AAAA(name string, z *Zone, record *Record) (answers, extras [
 		r.AAAA = aaaa.Ip
 		answers = append(answers, r)
 	}
+
+	// support service discovery
+	r, e := redis.SRV(name, z, record)
+	answers = append(answers, r...)
+	extras = append(extras, e...)
+
 	return
 }
 
