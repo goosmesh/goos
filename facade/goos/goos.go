@@ -1,5 +1,7 @@
 package main
 
+import "github.com/jsen-joker/goos/facade/goos/lifecycle"
+
 //var plugins = &support_plugin.Plugins{}
 //
 //func checkVersion(plugin *support_plugin.Plugin) {
@@ -10,7 +12,7 @@ package main
 
 
 func init() {
-	GoosWorker()
+	lifecycle.GoosWorker()
 }
 
 func main() {
