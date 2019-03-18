@@ -5,11 +5,10 @@ import (
 
 	"github.com/coredns/coredns/core/dnsserver"
 	"github.com/coredns/coredns/plugin"
-	clog "github.com/coredns/coredns/plugin/pkg/log"
 	"github.com/mholt/caddy"
 )
 
-var log = clog.NewWithPlugin("forward")
+//var log = clog.NewWithPlugin("forward")
 
 func init() {
 	caddy.RegisterPlugin("redis", caddy.Plugin{
