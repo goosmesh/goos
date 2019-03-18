@@ -60,11 +60,11 @@ func (g GoosLifecycle) Starting()  {
 	}
 	// 创建router
 	router := manager.CreateRouter()
-	log.Fatal(http.ListenAndServe(":8080", router))
 	// 启动插件
 	for _, p := range g.GoosPlugins.PluginList() {
 		p.Start()
 	}
+	log.Fatal(http.ListenAndServe(":8080", router))
 }
 
 func (g GoosLifecycle) AfterStart()  {

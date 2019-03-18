@@ -350,6 +350,8 @@ func (redis *Redis) findLocation(query string, z *Zone) string {
 }
 
 func (redis *Redis) get(key string, z *Zone) *Record {
+	fmt.Println(key)
+	fmt.Println(z)
 	var (
 		err error
 		reply interface{}
