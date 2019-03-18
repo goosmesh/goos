@@ -12,21 +12,21 @@ import (
 
 // ServeDNS implements the plugin.Handler interface.
 func (redis *Redis) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (int, error) {
-	log.Info("serveDNS")
+	//log.Info("serveDNS")
 	state := request.Request{W: w, Req: r}
 
 	qname := state.Name()
 	qtype := state.Type()
 
-	log.Info("name : ", qname)
-	log.Info("type : ", qtype)
+	//log.Info("name : ", qname)
+	//log.Info("type : ", qtype)
 
 	if time.Since(redis.LastZoneUpdate) > zoneUpdateTime {
 		redis.LoadZones()
 	}
 
 	zone := plugin.Zones(redis.Zones).Matches(qname)
-	log.Info("zone : ", zone)
+	//log.Info("zone : ", zone)
 	if zone == "" {
 		return plugin.NextOrFailure(qname, redis.Next, ctx, w, r)
 	}
@@ -40,7 +40,7 @@ func (redis *Redis) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.M
 	if len(location) == 0 { // empty, no results
 		return redis.errorResponse(state, zone, dns.RcodeNameError, nil)
 	}
-	log.Info("location : ", location)
+	//log.Info("location : ", location)
 
 	answers := make([]dns.RR, 0, 10)
 	extras := make([]dns.RR, 0, 10)
@@ -70,7 +70,7 @@ func (redis *Redis) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.M
 		return redis.errorResponse(state, zone, dns.RcodeNotImplemented, nil)
 	}
 
-	log.Info(answers)
+	//log.Info(answers)
 
 	m := new(dns.Msg)
 	m.SetReply(r)
