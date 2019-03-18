@@ -1,32 +1,32 @@
 package redis
 
 import (
+	"context"
 	// "fmt"
 	"time"
 
 	"github.com/coredns/coredns/plugin"
-	"github.com/miekg/dns"
-	"golang.org/x/net/context"
 	"github.com/coredns/coredns/request"
+	"github.com/miekg/dns"
 )
 
 // ServeDNS implements the plugin.Handler interface.
 func (redis *Redis) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (int, error) {
-	// fmt.Println("serveDNS")
+	log.Info("serveDNS")
 	state := request.Request{W: w, Req: r}
 
 	qname := state.Name()
 	qtype := state.Type()
 
-	// fmt.Println("name : ", qname)
-	// fmt.Println("type : ", qtype)
+	log.Info("name : ", qname)
+	log.Info("type : ", qtype)
 
 	if time.Since(redis.LastZoneUpdate) > zoneUpdateTime {
 		redis.LoadZones()
 	}
 
 	zone := plugin.Zones(redis.Zones).Matches(qname)
-	// fmt.Println("zone : ", zone)
+	log.Info("zone : ", zone)
 	if zone == "" {
 		return plugin.NextOrFailure(qname, redis.Next, ctx, w, r)
 	}
@@ -40,7 +40,7 @@ func (redis *Redis) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.M
 	if len(location) == 0 { // empty, no results
 		return redis.errorResponse(state, zone, dns.RcodeNameError, nil)
 	}
-	// fmt.Println("location : ", location)
+	log.Info("location : ", location)
 
 	answers := make([]dns.RR, 0, 10)
 	extras := make([]dns.RR, 0, 10)
@@ -69,6 +69,8 @@ func (redis *Redis) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.M
 	default:
 		return redis.errorResponse(state, zone, dns.RcodeNotImplemented, nil)
 	}
+
+	log.Info(answers)
 
 	m := new(dns.Msg)
 	m.SetReply(r)

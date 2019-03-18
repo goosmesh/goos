@@ -1,11 +1,11 @@
 package redis
 
 import (
-	"time"
 	"encoding/json"
-	"strings"
 	"fmt"
 	"net"
+	"strings"
+	"time"
 
 	"github.com/miekg/dns"
 
