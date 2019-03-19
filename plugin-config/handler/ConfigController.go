@@ -3,10 +3,10 @@ package handler
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/jsen-joker/goos/core/utils"
-	"github.com/jsen-joker/goos/plugin-config/entity"
-	"github.com/jsen-joker/goos/plugin-config/entity/vo"
-	"github.com/jsen-joker/goos/plugin-config/service"
+	"github.com/goosmesh/goos/core/utils"
+	"github.com/goosmesh/goos/plugin-config/entity"
+	"github.com/goosmesh/goos/plugin-config/entity/vo"
+	"github.com/goosmesh/goos/plugin-config/service"
 	"io/ioutil"
 	"net/http"
 )
@@ -206,6 +206,35 @@ func RsaGetConfig(w http.ResponseWriter, r *http.Request) {
 			if err := json.NewEncoder(w).Encode(resp); err != nil{
 				panic(err)
 			}
+		}
+	}
+}
+
+// 客户端获取配置文件API
+func GetConfigClient(w http.ResponseWriter, r *http.Request)  {
+	dataId, err := utils.GetParameter("dataId", false, "", w, r)
+	if err != nil {
+		return
+	}
+	groupId, err := utils.GetParameter("groupId", false, "", w, r)
+	if err != nil {
+		return
+	}
+	namespaceId, err := utils.GetParameter("namespaceId", true, "", w, r)
+	if err != nil {
+		return
+	}
+
+	if result, err := service.GetConfigByQuery(dataId, groupId, namespaceId); err == nil {
+		//resp := utils.Succeed(nil).PutAll(result)
+		_, _ = w.Write([] byte(result.(entity.Config).Content))
+		//if err := json.NewEncoder(w).Encode(resp); err != nil{
+		//	panic(err)
+		//}
+	} else {
+		resp := utils.Failed(err.Error())
+		if err := json.NewEncoder(w).Encode(resp); err != nil{
+			panic(err)
 		}
 	}
 }

@@ -3,10 +3,10 @@ package service
 import (
 	"crypto/md5"
 	"fmt"
-	"github.com/jsen-joker/goos/core/support-db"
-	"github.com/jsen-joker/goos/core/support-db/orm"
-	"github.com/jsen-joker/goos/plugin-config/entity"
-	"github.com/jsen-joker/goos/plugin-config/entity/vo"
+	"github.com/goosmesh/goos/core/support-db"
+	"github.com/goosmesh/goos/core/support-db/orm"
+	"github.com/goosmesh/goos/plugin-config/entity"
+	"github.com/goosmesh/goos/plugin-config/entity/vo"
 	"time"
 )
 
@@ -62,6 +62,32 @@ func GetConfigList(currentPage int64, pageSize int64, namespace int64, queryData
 
 func GetConfig(id int64) (result interface{}, err error) {
 	if result, err := support_db.QueryOne((&orm.QueryWrapper{}).Entity(entity.Config{Id:id})); err == nil {
+		//r := result.(entity.Config)
+		//if data, e := alg.RsaDecrypt(r.Content); e != nil {
+		//	return nil, e
+		//} else {
+		//	r.Content = data
+		//	return r, nil
+		//}
+		return result, nil
+	} else {
+		return result, err
+	}
+}
+
+func GetConfigByQuery(dataId string, groupId string, namespaceId string) (result interface{}, err error) {
+	query := entity.Config{DataID: dataId, GroupID: groupId, }
+
+	var n int64 = 0
+	if ns, err := GetNamespaceByNamespaceId(namespaceId); err == nil {
+		n = ns.(entity.Namespace).Id
+	}
+
+	if n > 0 {
+		query.NamespaceID = n
+	}
+
+	if result, err := support_db.QueryOne((&orm.QueryWrapper{}).Entity(query)); err == nil {
 		//r := result.(entity.Config)
 		//if data, e := alg.RsaDecrypt(r.Content); e != nil {
 		//	return nil, e

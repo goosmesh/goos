@@ -2,9 +2,9 @@ package controller
 
 import (
 	"encoding/json"
-	"github.com/jsen-joker/goos/core/utils"
-	"github.com/jsen-joker/goos/plugin-security/service"
-	utils2 "github.com/jsen-joker/goos/plugin-security/utils"
+	"github.com/goosmesh/goos/core/utils"
+	"github.com/goosmesh/goos/plugin-security/service"
+	utils2 "github.com/goosmesh/goos/plugin-security/utils"
 	"net/http"
 )
 

@@ -2,7 +2,7 @@ package controller
 
 import (
 	"fmt"
-	"github.com/jsen-joker/goos/plugin-goos-ui/constants"
+	"github.com/goosmesh/goos/plugin-goos-ui/constants"
 	"io/ioutil"
 	"log"
 	"net/http"

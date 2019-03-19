@@ -2,7 +2,7 @@ package controller
 
 import (
 	"encoding/json"
-	"github.com/jsen-joker/goos/core/utils"
+	"github.com/goosmesh/goos/core/utils"
 	"net/http"
 )
 

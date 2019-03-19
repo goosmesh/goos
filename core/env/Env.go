@@ -1,7 +1,7 @@
 package env
 
 import (
-	"github.com/jsen-joker/goos/core/utils"
+	"github.com/goosmesh/goos/core/utils"
 	"os"
 	"strings"
 )

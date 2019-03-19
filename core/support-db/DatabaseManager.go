@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/jsen-joker/goos/core/env"
-	"github.com/jsen-joker/goos/core/support-db/orm"
+	"github.com/goosmesh/goos/core/env"
+	"github.com/goosmesh/goos/core/support-db/orm"
 )
 
 var defaultDB *sql.DB

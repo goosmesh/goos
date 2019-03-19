@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"github.com/jsen-joker/goos/core/utils"
-	"github.com/jsen-joker/goos/plugin-config/entity"
-	"github.com/jsen-joker/goos/plugin-config/service"
+	"github.com/goosmesh/goos/core/utils"
+	"github.com/goosmesh/goos/plugin-config/entity"
+	"github.com/goosmesh/goos/plugin-config/service"
 	"io/ioutil"
 	"net/http"
 )

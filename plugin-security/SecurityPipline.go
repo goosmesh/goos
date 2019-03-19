@@ -2,8 +2,8 @@ package plugin_security
 
 import (
 	"encoding/json"
-	"github.com/jsen-joker/goos/core/utils"
-	utils2 "github.com/jsen-joker/goos/plugin-security/utils"
+	"github.com/goosmesh/goos/core/utils"
+	utils2 "github.com/goosmesh/goos/plugin-security/utils"
 	"net/http"
 	"strings"
 )

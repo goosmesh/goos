@@ -1,9 +1,9 @@
 package service
 
 import (
-	"github.com/jsen-joker/goos/core/support-db"
-	"github.com/jsen-joker/goos/core/support-db/orm"
-	"github.com/jsen-joker/goos/plugin-config/entity"
+	"github.com/goosmesh/goos/core/support-db"
+	"github.com/goosmesh/goos/core/support-db/orm"
+	"github.com/goosmesh/goos/plugin-config/entity"
 	"github.com/snluu/uuid"
 	"time"
 )
@@ -51,6 +51,10 @@ func GetNamespaceList(currentPage int64, pageSize int64, query string) (list []i
 		return []interface{}{}, total, nil
 	}
 	return rs, total, e
+}
+
+func GetNamespaceByNamespaceId(namespaceId string) (result interface{}, err error) {
+	return support_db.QueryOne((&orm.QueryWrapper{}).Entity(entity.Namespace{NamespaceID: namespaceId}))
 }
 
 func DeleteNamespace(id int64) (eff int64, err error) {

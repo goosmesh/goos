@@ -1,11 +1,11 @@
 package plugin_security
 
 import (
-	"github.com/jsen-joker/goos/core/env"
-	"github.com/jsen-joker/goos/core/support-plugin"
-	"github.com/jsen-joker/goos/core/support-plugin/manager"
-	"github.com/jsen-joker/goos/plugin-security/controller"
-	"github.com/jsen-joker/goos/plugin-security/entity"
+	"github.com/goosmesh/goos/core/env"
+	"github.com/goosmesh/goos/core/support-plugin"
+	"github.com/goosmesh/goos/core/support-plugin/manager"
+	"github.com/goosmesh/goos/plugin-security/controller"
+	"github.com/goosmesh/goos/plugin-security/entity"
 )
 
 type PluginSecurity struct {

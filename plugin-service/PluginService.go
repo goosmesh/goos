@@ -1,9 +1,9 @@
 package plugin_service
 
 import (
-	"github.com/jsen-joker/goos/core/support-plugin"
-	"github.com/jsen-joker/goos/core/support-plugin/manager"
-	"github.com/jsen-joker/goos/plugin-service/controller"
+	"github.com/goosmesh/goos/core/support-plugin"
+	"github.com/goosmesh/goos/core/support-plugin/manager"
+	"github.com/goosmesh/goos/plugin-service/controller"
 )
 
 type PluginService struct {

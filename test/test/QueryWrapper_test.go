@@ -2,8 +2,8 @@ package test
 
 import (
 	"fmt"
-	"github.com/jsen-joker/goos/core/support-db/orm"
-	"github.com/jsen-joker/goos/plugin-config/entity"
+	"github.com/goosmesh/goos/core/support-db/orm"
+	"github.com/goosmesh/goos/plugin-config/entity"
 	"testing"
 )
 

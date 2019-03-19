@@ -1,9 +1,9 @@
 package plugin_goos_ui
 
 import (
-	"github.com/jsen-joker/goos/core/support-plugin"
-	"github.com/jsen-joker/goos/core/support-plugin/manager"
-	"github.com/jsen-joker/goos/plugin-goos-ui/controller"
+	"github.com/goosmesh/goos/core/support-plugin"
+	"github.com/goosmesh/goos/core/support-plugin/manager"
+	"github.com/goosmesh/goos/plugin-goos-ui/controller"
 )
 
 type PluginUI struct {

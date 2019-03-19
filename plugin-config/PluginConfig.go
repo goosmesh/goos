@@ -1,10 +1,10 @@
 package plugin_config
 
 import (
-	"github.com/jsen-joker/goos/core/support-plugin"
-	"github.com/jsen-joker/goos/core/support-plugin/manager"
-	"github.com/jsen-joker/goos/plugin-config/entity"
-	"github.com/jsen-joker/goos/plugin-config/handler"
+	"github.com/goosmesh/goos/core/support-plugin"
+	"github.com/goosmesh/goos/core/support-plugin/manager"
+	"github.com/goosmesh/goos/plugin-config/entity"
+	"github.com/goosmesh/goos/plugin-config/handler"
 )
 
 type PluginConfig struct {
@@ -26,7 +26,9 @@ func (p *PluginConfig) Init()  {
 
 
 
-	manager.RegisterRouter(&manager.Route{Name: "ConfigRSAGET",     Method:"POST",   Pattern:"/api/pub/config/get", HandlerFunc: handler.RsaGetConfig})
+	// wait update method to get
+	manager.RegisterRouter(&manager.Route{Name: "ClientConfigRefreshGET",     Method:"POST",   Pattern:"/api/pub/config/get/listen", HandlerFunc: handler.RsaGetConfig})
+	manager.RegisterRouter(&manager.Route{Name: "ClientConfigGET",     Method:"GET",   Pattern:"/api/pub/config/get", HandlerFunc: handler.GetConfigClient})
 
 }
 func (p *PluginConfig) Start()  {

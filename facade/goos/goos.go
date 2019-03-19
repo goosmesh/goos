@@ -1,6 +1,6 @@
 package main
 
-import "github.com/jsen-joker/goos/facade/goos/lifecycle"
+import "github.com/goosmesh/goos/facade/goos/lifecycle"
 
 //var plugins = &support_plugin.Plugins{}
 //

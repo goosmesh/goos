@@ -1,8 +1,8 @@
 package lifecycle
 
 import (
-	"github.com/jsen-joker/goos/core/env"
-	"github.com/jsen-joker/goos/core/support-plugin"
+	"github.com/goosmesh/goos/core/env"
+	"github.com/goosmesh/goos/core/support-plugin"
 )
 
 func GoosWorker()  {

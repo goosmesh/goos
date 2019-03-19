@@ -1,6 +1,6 @@
 package entity
 
-import "github.com/jsen-joker/goos/core/support-db/orm"
+import "github.com/goosmesh/goos/core/support-db/orm"
 
 type Namespace struct {
 	Id int64 `name:"id"PK:"true"auto:"true"json:"id"`

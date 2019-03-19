@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/jsen-joker/goos/core/utils"
+	"github.com/goosmesh/goos/core/utils"
 )
 
 func main() {
