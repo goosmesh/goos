@@ -3,6 +3,7 @@ package lifecycle
 import (
 	"github.com/goosmesh/goos/core/env"
 	"github.com/goosmesh/goos/core/support-plugin"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -10,6 +11,7 @@ import (
 
 func GoosWorker()  {
 	// 初始化环境变量
+	log.Println("goos starting")
 	env.InitEnv()
 
 	life := GoosLifecycle{

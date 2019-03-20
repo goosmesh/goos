@@ -1,6 +1,9 @@
 package main
 
-import "github.com/goosmesh/goos/facade/goos/lifecycle"
+import (
+	"fmt"
+	"github.com/goosmesh/goos/facade/goos/lifecycle"
+)
 
 //var plugins = &support_plugin.Plugins{}
 //
@@ -13,6 +16,12 @@ import "github.com/goosmesh/goos/facade/goos/lifecycle"
 
 func init() {
 	lifecycle.GoosWorker()
+
+	ch := make(chan string)
+	select {
+	case result := <-ch:
+		fmt.Println(result)
+	}
 }
 
 func main() {

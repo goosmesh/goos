@@ -23,7 +23,7 @@ func setup(c *caddy.Controller) error {
 		return plugin.Error(Name, err)
 	}
 
-	go lifecycle.GoosWorker()
+	lifecycle.GoosWorker()
 
 	return nil
 }

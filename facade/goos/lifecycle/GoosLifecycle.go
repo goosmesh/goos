@@ -67,7 +67,7 @@ func (g GoosLifecycle) Starting()  {
 	for _, p := range g.GoosPlugins.PluginList() {
 		p.Start()
 	}
-	log.Fatal(http.ListenAndServe(":4323", router))
+	go http.ListenAndServe(":4323", router)
 }
 
 func (g GoosLifecycle) AfterStart()  {

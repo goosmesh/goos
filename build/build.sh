@@ -15,7 +15,7 @@ cd ${current}
 # build production
 git clone https://github.com/coredns/coredns.git
 cd coredns
-\cp ././coredns.go ./
+#\cp ././coredns.go ./
 \cp ././plugin.cfg ./
 
 go generate
