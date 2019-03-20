@@ -20,6 +20,10 @@ func HandleStaticResource(w http.ResponseWriter, r *http.Request)  {
 			w.Header().Set("Content-Type", "text/css")
 		case ".js":
 			w.Header().Set("Content-Type", "text/javascript")
+		case ".png":
+			w.Header().Set("Content-Type", "image/png")
+		case ".json":
+			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		default:
 			w.Header().Set("Content-Type", "text/html")
 		}

@@ -10,6 +10,7 @@ import (
 type PluginConfig struct {
 }
 func (p *PluginConfig) Init()  {
+
 	entity.Init()
 
 	manager.RegisterRouter(&manager.Route{Name: "ConfigEcho",     Method:"GET",   Pattern:"/configEcho", HandlerFunc: handler.ConfigEcho})
