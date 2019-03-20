@@ -1,0 +1,12 @@
+.:54 {
+  cache
+  redis {
+    address localhost:6379
+    password test
+    connect_timeout 100
+    read_timeout 100
+    ttl 360
+  }
+  forward . 8.8.8.8
+  errors
+}
