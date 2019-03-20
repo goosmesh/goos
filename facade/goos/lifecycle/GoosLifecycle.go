@@ -28,6 +28,7 @@ func (g GoosLifecycle) checkVersion(plugin *support_plugin.Plugin) {
 }
 
 func (g GoosLifecycle) Init()  {
+	log.Println("init")
 	defer g.BeforeStart()
 	// 初始化数据库
 	support_db.Init()
@@ -37,6 +38,7 @@ func (g GoosLifecycle) Init()  {
 }
 
 func (g GoosLifecycle) BeforeStart()  {
+	log.Println("before start")
 	defer g.Starting()
 	var plugin = support_plugin.ReflectCreatePlugin(plugin_security.CreatePlugin)
 	g.checkVersion(plugin)
@@ -53,6 +55,7 @@ func (g GoosLifecycle) BeforeStart()  {
 }
 
 func (g GoosLifecycle) Starting()  {
+	log.Print("starting")
 	defer g.AfterStart()
 	// 初始化插件
 	for _, p := range g.GoosPlugins.PluginList() {
@@ -64,10 +67,11 @@ func (g GoosLifecycle) Starting()  {
 	for _, p := range g.GoosPlugins.PluginList() {
 		p.Start()
 	}
-	log.Fatal(http.ListenAndServe(":4321", router))
+	log.Fatal(http.ListenAndServe(":4323", router))
 }
 
 func (g GoosLifecycle) AfterStart()  {
+	log.Print("after start")
 }
 
 func (g GoosLifecycle) BeforeDestroy()  {
@@ -78,8 +82,10 @@ func (g GoosLifecycle) BeforeDestroy()  {
 
 func (g GoosLifecycle) Destroy()  {
 	defer g.AfterDestroy()
+	log.Print("destroy")
+
 }
 
 func (g GoosLifecycle) AfterDestroy()  {
-
+	log.Print("after destroy")
 }

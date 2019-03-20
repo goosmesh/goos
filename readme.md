@@ -1,5 +1,11 @@
 # Goos
 
+### In Plan
+    1、匹配sca nacos配置文件 api
+    2、加入缓存
+    3、实现AP Cluster
+
+
 ### Api设计原则
     
     在良好的区分度的情况下，尽可能的精简Api，（例如，create和update可以合并为一个Api，在统一范式的情况下，这是一种可读性较高的设计方法）

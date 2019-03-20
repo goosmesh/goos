@@ -13,6 +13,7 @@ var GoosSecurityIgnoreUrls = []string{}
 //var GoosDatabase = "user:password@tcp(127.0.0.1:3306)/test"
 var GoosDatabase = "root:1234@tcp(127.0.0.1:3306)/goos"
 var GoosVersion = "0.0.1"
+var GoosPort = "4321"
 
 func InitEnv()  {
 	GoosHome = GetEnv(KeyGoosHome, GoosHome)
@@ -20,6 +21,7 @@ func InitEnv()  {
 	GoosSecurityIgnoreUrls = strings.Split(GetEnv(KeyGoosSecurityIgnoreUrls, "/api/security/**,/desk/**,/api/dsa/**,/api/pub/**"), ",")
 	GoosDatabase = GetEnv(KeyGoosDatabase, GoosDatabase)
 	GoosVersion = GetEnv(KeyGoosVersion, GoosVersion)
+	GoosPort = GetEnv(KeyGoosPort, GoosPort)
 }
 
 func GetEnv(key string, defaultValue string) string  {

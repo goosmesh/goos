@@ -28,7 +28,8 @@ func (p *PluginConfig) Init()  {
 
 
 	// wait update method to get
-	manager.RegisterRouter(&manager.Route{Name: "ClientConfigRefreshGET",     Method:"POST",   Pattern:"/api/pub/config/get/listen", HandlerFunc: handler.RsaGetConfig})
+	//manager.RegisterRouter(&manager.Route{Name: "ClientConfigRefreshGET",     Method:"POST",   Pattern:"/api/pub/config/get/listen", HandlerFunc: handler.RsaGetConfig})
+	manager.RegisterRouter(&manager.Route{Name: "ClientConfigRefreshListener",     Method:"POST",   Pattern:"/api/pub/config/get/listener", HandlerFunc: handler.ConfigLongPollListener})
 	manager.RegisterRouter(&manager.Route{Name: "ClientConfigGET",     Method:"GET",   Pattern:"/api/pub/config/get", HandlerFunc: handler.GetConfigClient})
 
 }

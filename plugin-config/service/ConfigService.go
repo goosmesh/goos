@@ -6,7 +6,6 @@ import (
 	"github.com/goosmesh/goos/core/support-db"
 	"github.com/goosmesh/goos/core/support-db/orm"
 	"github.com/goosmesh/goos/plugin-config/entity"
-	"github.com/goosmesh/goos/plugin-config/entity/vo"
 	"time"
 )
 
@@ -113,43 +112,43 @@ func DeleteConfig(id int64) (eff int64, err error) {
 
 ///////////////////////////////////   RSA CLIENT API      ///////////////////////////////
 
-func RsaGetConfig(query vo.ConfigQuery) (result []interface{}, err error) {
-	if result, err := support_db.QueryOne((&orm.QueryWrapper{}).Entity(entity.Namespace{NamespaceID: query.NamespaceID})); err == nil {
-		namespaceId := result.(entity.Namespace).Id
-
-		configList := query.ConfigList
-
-		var params []interface{}
-		sql := "select * from plugin_config where namespace_id=? and group_id=? and("
-
-		params = append(params, namespaceId, query.GroupID)
-
-
-		for _, config := range configList  {
-			sql += "(md5!=? and data_id=?) or"
-			params = append(params, config.MD5, config.DataID)
-		}
-		sql = sql[ : len(sql) - 3]
-		sql += ")"
-
-		fmt.Println(sql)
-		fmt.Println(params)
-
-		myrows, err := support_db.SqlQuery(sql, params...)
-		if err != nil{
-			return nil, err
-		}
-		list, err :=  myrows.To((&orm.QueryWrapper{}).Entity(entity.Config{}).GetFrom())
-		if err != nil{
-			return nil, err
-		}
-
-		if list == nil {
-			list = []interface{} {}
-		}
-		return list, err
-	} else {
-		return nil, err
-	}
-
-}
+//func RsaGetConfig(query vo.ConfigQuery) (result []interface{}, err error) {
+//	if result, err := support_db.QueryOne((&orm.QueryWrapper{}).Entity(entity.Namespace{NamespaceID: query.NamespaceID})); err == nil {
+//		namespaceId := result.(entity.Namespace).Id
+//
+//		configList := query.ConfigList
+//
+//		var params []interface{}
+//		sql := "select * from plugin_config where namespace_id=? and group_id=? and("
+//
+//		params = append(params, namespaceId, query.GroupID)
+//
+//
+//		for _, config := range configList  {
+//			sql += "(md5!=? and data_id=?) or"
+//			params = append(params, config.MD5, config.DataID)
+//		}
+//		sql = sql[ : len(sql) - 3]
+//		sql += ")"
+//
+//		fmt.Println(sql)
+//		fmt.Println(params)
+//
+//		myrows, err := support_db.SqlQuery(sql, params...)
+//		if err != nil{
+//			return nil, err
+//		}
+//		list, err :=  myrows.To((&orm.QueryWrapper{}).Entity(entity.Config{}).GetFrom())
+//		if err != nil{
+//			return nil, err
+//		}
+//
+//		if list == nil {
+//			list = []interface{} {}
+//		}
+//		return list, err
+//	} else {
+//		return nil, err
+//	}
+//
+//}

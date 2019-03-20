@@ -2,13 +2,19 @@ package handler
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/goosmesh/goos/core/utils"
 	"github.com/goosmesh/goos/plugin-config/entity"
-	"github.com/goosmesh/goos/plugin-config/entity/vo"
+	"github.com/goosmesh/goos/plugin-config/longpolling"
+	utils2 "github.com/goosmesh/goos/plugin-config/longpolling/utils"
 	"github.com/goosmesh/goos/plugin-config/service"
 	"io/ioutil"
 	"net/http"
+	"net/url"
+	"strconv"
+	"time"
 )
 
 // 配置文件处理
@@ -166,49 +172,121 @@ func DeleteConfig(w http.ResponseWriter, r *http.Request) {
 
 
 ///////////////////////////////////   RSA CLIENT API      ///////////////////////////////
-// 传入配置文件MD5，比较文件MD5，不一致则返回RSA加密数据
 
+//func longOperation(ctx context.Context, ch chan<- string) {
+//	// Simulate long operation.
+//	// Change it to more than 10 seconds to get server timeout.
+//	select {
+//	case <-time.After(time.Second * 2):
+//		ch <- "Successful result1."
+//		ch <- "Successful result2."
+//	case <-ctx.Done():
+//		close(ch)
+//	}
+//}
+// 基于md5的 long polling 配置变化监听
+func ConfigLongPollListener(w http.ResponseWriter, r *http.Request)  {
+	// get header long pulling metas
 
-func RsaGetConfig(w http.ResponseWriter, r *http.Request) {
-	body, err := ioutil.ReadAll(r.Body)
-	//fmt.Println(r.Header.Get("Content-Type"))
+	timeout, err := utils.GetInt64Header("Long-Pulling-Timeout", false, 30000, nil, r)
 	if err != nil {
-		resp := utils.Failed(err.Error())
-		if err := json.NewEncoder(w).Encode(resp); err != nil{
-			panic(err)
-		}
+		_, _ = fmt.Fprint(w, "")
+		return
 	}
-	//else {
-	//	fmt.Println(bytes.NewBuffer(body).String())
-	//}
 
-	var configQuery vo.ConfigQuery
-	if err := json.Unmarshal([]byte(bytes.NewBuffer(body).String()), &configQuery); err != nil {
-		resp := utils.Failed(err.Error())
-		if err := json.NewEncoder(w).Encode(resp); err != nil{
-			panic(err)
-		}
-	} else {
-		if len(configQuery.ConfigList) == 0 {
-			resp := utils.Succeed(nil)
-			if err := json.NewEncoder(w).Encode(resp); err != nil{
-				panic(err)
-			}
-			return
-		}
-		if result, err := service.RsaGetConfig(configQuery); err == nil {
-			resp := utils.Succeed(result)
-			if err := json.NewEncoder(w).Encode(resp); err != nil{
-				panic(err)
-			}
-		} else {
-			resp := utils.Failed(err.Error())
-			if err := json.NewEncoder(w).Encode(resp); err != nil{
-				panic(err)
-			}
-		}
+	noHangup, err := utils.GetHeader("Long-Pulling-Timeout-No-Hangup", true, "true", nil, r)
+	if err != nil {
+		_, _ = fmt.Fprint(w, "")
+		return
 	}
+	nh, err := strconv.ParseBool(noHangup)
+	if err != nil {
+		nh = true
+	}
+
+	probeModify, err := utils.GetParameter("Listening-Configs", false, "", nil, r)
+	if err != nil {
+		_, _ = fmt.Fprint(w, "")
+		return
+	}
+	probeModifyDecode, err := url.QueryUnescape(probeModify)
+	if err != nil {
+		_, _ = fmt.Fprint(w, "")
+		return
+	}
+
+	clientMd5Map := utils2.ConfigMD5ToMap(probeModifyDecode)
+	fmt.Println(clientMd5Map)
+
+
+	// first test go long polling
+	notifier, ok := w.(http.CloseNotifier)
+	if !ok {
+		panic("Expected http.ResponseWriter to be an http.CloseNotifier")
+	}
+
+	ctx, cancel := context.WithCancel(context.Background())
+	ch := make(chan string)
+	exe, clientClose := longpolling.AddLongPolling(ctx, ch, clientMd5Map, nh)
+	go exe()
+
+	select {
+	case result := <-ch:
+		_, _ = fmt.Fprint(w, result)
+		cancel()
+		return
+	case <-time.After(time.Millisecond * time.Duration(timeout)):
+		_, _ = fmt.Fprint(w, "")
+	case <-notifier.CloseNotify():
+		clientClose()
+		fmt.Println("Client has disconnected.")
+	}
+	cancel()
+	<-ch
+
 }
+
+// 传入配置文件MD5，比较文件MD5，不一致则返回RSA加密数据
+//func RsaGetConfig(w http.ResponseWriter, r *http.Request) {
+//	body, err := ioutil.ReadAll(r.Body)
+//	//fmt.Println(r.Header.Get("Content-Type"))
+//	if err != nil {
+//		resp := utils.Failed(err.Error())
+//		if err := json.NewEncoder(w).Encode(resp); err != nil{
+//			panic(err)
+//		}
+//	}
+//	//else {
+//	//	fmt.Println(bytes.NewBuffer(body).String())
+//	//}
+//
+//	var configQuery vo.ConfigQuery
+//	if err := json.Unmarshal([]byte(bytes.NewBuffer(body).String()), &configQuery); err != nil {
+//		resp := utils.Failed(err.Error())
+//		if err := json.NewEncoder(w).Encode(resp); err != nil{
+//			panic(err)
+//		}
+//	} else {
+//		if len(configQuery.ConfigList) == 0 {
+//			resp := utils.Succeed(nil)
+//			if err := json.NewEncoder(w).Encode(resp); err != nil{
+//				panic(err)
+//			}
+//			return
+//		}
+//		if result, err := service.RsaGetConfig(configQuery); err == nil {
+//			resp := utils.Succeed(result)
+//			if err := json.NewEncoder(w).Encode(resp); err != nil{
+//				panic(err)
+//			}
+//		} else {
+//			resp := utils.Failed(err.Error())
+//			if err := json.NewEncoder(w).Encode(resp); err != nil{
+//				panic(err)
+//			}
+//		}
+//	}
+//}
 
 // 客户端获取配置文件API
 func GetConfigClient(w http.ResponseWriter, r *http.Request)  {

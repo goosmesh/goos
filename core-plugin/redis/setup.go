@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-var log = clog.NewWithPlugin("forward")
+var log = clog.NewWithPlugin("redis")
 
 func init() {
 	caddy.RegisterPlugin("redis", caddy.Plugin{
