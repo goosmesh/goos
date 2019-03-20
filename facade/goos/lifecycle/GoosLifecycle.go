@@ -1,6 +1,7 @@
 package lifecycle
 
 import (
+	"github.com/goosmesh/goos/core/env"
 	"github.com/goosmesh/goos/core/support-db"
 	"github.com/goosmesh/goos/core/support-plugin"
 	"github.com/goosmesh/goos/core/support-plugin/manager"
@@ -67,7 +68,7 @@ func (g GoosLifecycle) Starting()  {
 	for _, p := range g.GoosPlugins.PluginList() {
 		p.Start()
 	}
-	go http.ListenAndServe(":4323", router)
+	go http.ListenAndServe(":" + env.GoosPort, router)
 }
 
 func (g GoosLifecycle) AfterStart()  {

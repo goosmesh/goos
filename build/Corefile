@@ -1,5 +1,6 @@
 .:54 {
   cache
+  goos
   redis {
     address localhost:6379
     password test
