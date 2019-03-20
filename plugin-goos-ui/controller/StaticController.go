@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-var StaticRoot = env.GoosHome + "/static"
+var StaticRoot = env.GoosHome + "/desk"
 
 func HandleStaticResource(w http.ResponseWriter, r *http.Request)  {
 	path := r.URL.Path
