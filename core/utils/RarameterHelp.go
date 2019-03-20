@@ -3,7 +3,6 @@ package utils
 import (
 	"encoding/json"
 	"errors"
-	"github.com/jsen-joker/gend/exporter/rest/utils"
 	"net/http"
 	"strconv"
 )
@@ -22,7 +21,7 @@ func GetParameter(name string, nullAble bool, defaultValue string, w http.Respon
 
 	if len(v) == 0 {
 		if !nullAble {
-			resp := utils.Failed("goos required parameter " + name)
+			resp := Failed("goos required parameter " + name)
 			if err := json.NewEncoder(w).Encode(resp); err != nil{
 				return "", err
 			} else {
