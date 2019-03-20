@@ -75,6 +75,7 @@ func GetConfig(id int64) (result interface{}, err error) {
 	}
 }
 
+// 根据dataId等参数获取配置文件
 func GetConfigByQuery(dataId string, groupId string, namespaceId string) (result interface{}, err error) {
 	query := entity.Config{DataID: dataId, GroupID: groupId, }
 

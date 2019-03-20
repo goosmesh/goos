@@ -16,7 +16,8 @@ var GoosVersion = "0.0.1"
 
 func InitEnv()  {
 	GoosHome = GetEnv(KeyGoosHome, GoosHome)
-	GoosSecurityIgnoreUrls = strings.Split(GetEnv(KeyGoosSecurityIgnoreUrls, "/**"), ",")
+	//GoosSecurityIgnoreUrls = strings.Split(GetEnv(KeyGoosSecurityIgnoreUrls, "/**"), ",")
+	GoosSecurityIgnoreUrls = strings.Split(GetEnv(KeyGoosSecurityIgnoreUrls, "/api/security/**,/static/**,/api/dsa/**,/api/pub/**"), ",")
 	GoosDatabase = GetEnv(KeyGoosDatabase, GoosDatabase)
 	GoosVersion = GetEnv(KeyGoosVersion, GoosVersion)
 }
