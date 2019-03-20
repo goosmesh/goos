@@ -127,7 +127,7 @@ func (redis *Redis) LoadZones() {
 	redis.Zones = zones
 }
 
-func (redis *Redis) A(name string, z *Zone, record *Record) (answers, extras []dns.RR) {
+func (redis *Redis) A(name string, z *Zone, record *Record, proto string) (answers, extras []dns.RR) {
 	for _, a := range record.A {
 		if a.Ip == nil {
 			continue
@@ -140,6 +140,20 @@ func (redis *Redis) A(name string, z *Zone, record *Record) (answers, extras []d
 	}
 
 	// support service discovery
+	for _, srv := range record.SRV {
+		if len(srv.Target) == 0 {
+			continue
+		}
+		r := new(dns.SRV)
+		r.Hdr = dns.RR_Header{Name: "_" + proto + "." + name, Rrtype: dns.TypeSRV,
+			Class: dns.ClassINET, Ttl: redis.minTtl(srv.Ttl)}
+		r.Target = srv.Target
+		r.Weight = srv.Weight
+		r.Port = srv.Port
+		r.Priority = srv.Priority
+		extras = append(extras, r)
+	}
+
 	//r, e := redis.SRV(name, z, record)
 	//answers = append(answers, r...)
 	//extras = append(extras, e...)
@@ -147,7 +161,7 @@ func (redis *Redis) A(name string, z *Zone, record *Record) (answers, extras []d
 	return
 }
 
-func (redis Redis) AAAA(name string, z *Zone, record *Record) (answers, extras []dns.RR) {
+func (redis Redis) AAAA(name string, z *Zone, record *Record, proto string) (answers, extras []dns.RR) {
 	for _, aaaa := range record.AAAA {
 		if aaaa.Ip == nil {
 			continue
@@ -160,6 +174,20 @@ func (redis Redis) AAAA(name string, z *Zone, record *Record) (answers, extras [
 	}
 
 	// support service discovery
+	for _, srv := range record.SRV {
+		if len(srv.Target) == 0 {
+			continue
+		}
+		r := new(dns.SRV)
+		r.Hdr = dns.RR_Header{Name: "_" + proto + "." + name, Rrtype: dns.TypeSRV,
+			Class: dns.ClassINET, Ttl: redis.minTtl(srv.Ttl)}
+		r.Target = srv.Target
+		r.Weight = srv.Weight
+		r.Port = srv.Port
+		r.Priority = srv.Priority
+		extras = append(extras, r)
+	}
+
 	//r, e := redis.SRV(name, z, record)
 	//answers = append(answers, r...)
 	//extras = append(extras, e...)
@@ -195,7 +223,7 @@ func (redis *Redis) TXT(name string, z *Zone, record *Record) (answers, extras [
 	return
 }
 
-func (redis *Redis) NS(name string, z *Zone, record *Record) (answers, extras []dns.RR) {
+func (redis *Redis) NS(name string, z *Zone, record *Record, proto string) (answers, extras []dns.RR) {
 	for _, ns := range record.NS {
 		if len(ns.Host) == 0 {
 			continue
@@ -205,12 +233,12 @@ func (redis *Redis) NS(name string, z *Zone, record *Record) (answers, extras []
 			Class: dns.ClassINET, Ttl: redis.minTtl(ns.Ttl)}
 		r.Ns = ns.Host
 		answers = append(answers, r)
-		extras = append(extras, redis.hosts(ns.Host, z)...)
+		extras = append(extras, redis.hosts(ns.Host, z, proto)...)
 	}
 	return
 }
 
-func (redis *Redis) MX(name string, z *Zone, record *Record) (answers, extras []dns.RR) {
+func (redis *Redis) MX(name string, z *Zone, record *Record, proto string) (answers, extras []dns.RR) {
 	for _, mx := range record.MX {
 		if len(mx.Host) == 0 {
 			continue
@@ -221,12 +249,12 @@ func (redis *Redis) MX(name string, z *Zone, record *Record) (answers, extras []
 		r.Mx = mx.Host
 		r.Preference = mx.Preference
 		answers = append(answers, r)
-		extras = append(extras, redis.hosts(mx.Host, z)...)
+		extras = append(extras, redis.hosts(mx.Host, z, proto)...)
 	}
 	return
 }
 
-func (redis *Redis) SRV(name string, z *Zone, record *Record) (answers, extras []dns.RR) {
+func (redis *Redis) SRV(name string, z *Zone, record *Record, proto string) (answers, extras []dns.RR) {
 	for _, srv := range record.SRV {
 		if len(srv.Target) == 0 {
 			continue
@@ -239,7 +267,7 @@ func (redis *Redis) SRV(name string, z *Zone, record *Record) (answers, extras [
 		r.Port = srv.Port
 		r.Priority = srv.Priority
 		answers = append(answers, r)
-		extras = append(extras, redis.hosts(srv.Target, z)...)
+		extras = append(extras, redis.hosts(srv.Target, z, proto)...)
 	}
 	return
 }
@@ -288,7 +316,7 @@ func (redis *Redis) CAA(name string, z *Zone, record *Record) (answers, extras [
 	return
 }
 
-func (redis *Redis) hosts(name string, z *Zone) []dns.RR {
+func (redis *Redis) hosts(name string, z *Zone, proto string) []dns.RR {
 	var (
 		record *Record
 		answers []dns.RR
@@ -298,9 +326,9 @@ func (redis *Redis) hosts(name string, z *Zone) []dns.RR {
 		return nil
 	}
 	record = redis.get(location, z)
-	a, _ := redis.A(name, z, record)
+	a, _ := redis.A(name, z, record, proto)
 	answers = append(answers, a...)
-	aaaa, _ := redis.AAAA(name, z, record)
+	aaaa, _ := redis.AAAA(name, z, record, proto)
 	answers = append(answers, aaaa...)
 	cname, _ := redis.CNAME(name, z, record)
 	answers = append(answers, cname...)

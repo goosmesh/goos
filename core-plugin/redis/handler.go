@@ -2,6 +2,7 @@ package redis
 
 import (
 	"context"
+
 	// "fmt"
 	"time"
 
@@ -12,21 +13,21 @@ import (
 
 // ServeDNS implements the plugin.Handler interface.
 func (redis *Redis) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (int, error) {
-	//log.Info("serveDNS")
+	log.Info("serveDNS")
 	state := request.Request{W: w, Req: r}
 
 	qname := state.Name()
 	qtype := state.Type()
 
-	//log.Info("name : ", qname)
-	//log.Info("type : ", qtype)
+	log.Info("name : ", qname)
+	log.Info("type : ", qtype)
 
 	if time.Since(redis.LastZoneUpdate) > zoneUpdateTime {
 		redis.LoadZones()
 	}
 
 	zone := plugin.Zones(redis.Zones).Matches(qname)
-	//log.Info("zone : ", zone)
+	log.Info("zone : ", zone)
 	if zone == "" {
 		return plugin.NextOrFailure(qname, redis.Next, ctx, w, r)
 	}
@@ -40,7 +41,7 @@ func (redis *Redis) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.M
 	if len(location) == 0 { // empty, no results
 		return redis.errorResponse(state, zone, dns.RcodeNameError, nil)
 	}
-	//log.Info("location : ", location)
+	log.Info("location : ", location)
 
 	answers := make([]dns.RR, 0, 10)
 	extras := make([]dns.RR, 0, 10)
@@ -49,19 +50,19 @@ func (redis *Redis) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.M
 
 	switch qtype {
 	case "A":
-		answers, extras = redis.A(qname, z, record)
+		answers, extras = redis.A(qname, z, record, state.Proto())
 	case "AAAA":
-		answers, extras = redis.AAAA(qname, z, record)
+		answers, extras = redis.AAAA(qname, z, record, state.Proto())
 	case "CNAME":
 		answers, extras = redis.CNAME(qname, z, record)
 	case "TXT":
 		answers, extras = redis.TXT(qname, z, record)
 	case "NS":
-		answers, extras = redis.NS(qname, z, record)
+		answers, extras = redis.NS(qname, z, record, state.Proto())
 	case "MX":
-		answers, extras = redis.MX(qname, z, record)
+		answers, extras = redis.MX(qname, z, record, state.Proto())
 	case "SRV":
-		answers, extras = redis.SRV(qname, z, record)
+		answers, extras = redis.SRV(qname, z, record, state.Proto())
 	case "SOA":
 		answers, extras = redis.SOA(qname, z, record)
 	case "CAA":

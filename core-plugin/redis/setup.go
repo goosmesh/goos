@@ -1,14 +1,15 @@
 package redis
 
 import (
-	"strconv"
-
 	"github.com/coredns/coredns/core/dnsserver"
+	clog "github.com/coredns/coredns/plugin/pkg/log"
+
 	"github.com/coredns/coredns/plugin"
 	"github.com/mholt/caddy"
+	"strconv"
 )
 
-//var log = clog.NewWithPlugin("forward")
+var log = clog.NewWithPlugin("forward")
 
 func init() {
 	caddy.RegisterPlugin("redis", caddy.Plugin{

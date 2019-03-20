@@ -29,7 +29,7 @@ func GetParameter(name string, nullAble bool, defaultValue string, w http.Respon
 				return "", errors.New("goos required parameter " + name)
 			}
 		} else {
-			return "", nil
+			return defaultValue, nil
 		}
 	} else {
 		return v[0], nil
