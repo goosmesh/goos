@@ -19,9 +19,10 @@ func (p *PluginUI) Init()  {
 		log.Fatal(err)
 	}
 	fmt.Println(dir)
+	controller.StaticRoot = dir
 
 	manager.RegisterRouter(&manager.Route{Name: "UIEcho",     Method:"GET",   Pattern:"/uiEcho", HandlerFunc: controller.UIEcho})
-	manager.RegisterRouter(&manager.Route{Name: "UI_STATIC_SERVER",     Method:"GET",   Pattern:"/static/**", HandlerFunc: controller.HandleStaticResource})
+	manager.RegisterRouter(&manager.Route{Name: "UI_STATIC_SERVER",     Method:"GET",   Pattern:"/desk/**", HandlerFunc: controller.HandleStaticResource})
 
 }
 func (p *PluginUI) Start()  {

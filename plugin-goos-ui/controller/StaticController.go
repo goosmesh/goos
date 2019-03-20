@@ -2,13 +2,15 @@ package controller
 
 import (
 	"fmt"
-	"github.com/goosmesh/goos/plugin-goos-ui/constants"
+	"github.com/goosmesh/goos/core/env"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"strings"
 )
+
+var StaticRoot = env.GoosHome + "/static"
 
 func HandleStaticResource(w http.ResponseWriter, r *http.Request)  {
 	path := r.URL.Path
@@ -29,13 +31,13 @@ func HandleStaticResource(w http.ResponseWriter, r *http.Request)  {
 		}
 	}
 
-	fin, err := os.Open(constants.GOOS_HOME + path)
-	fmt.Println(constants.GOOS_HOME + path)
+	fin, err := os.Open(StaticRoot + path)
+	fmt.Println(StaticRoot + path)
 	defer fin.Close()
 	if err != nil {
 		log.Fatal("static resource:", err)
 	}
 
 	fd, _ := ioutil.ReadAll(fin)
-	w.Write(fd)
+	_, _ = w.Write(fd)
 }
