@@ -17,7 +17,7 @@ import (
 
 func init() {
 	env.InitEnv()
-	env.GoosPort = "3321"
+	env.GoosPort = "4321"
 
 	lifecycle.GoosWorker()
 

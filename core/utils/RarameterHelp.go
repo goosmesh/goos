@@ -8,12 +8,18 @@ import (
 )
 
 func getParameter(name string, r *http.Request) []string  {
-	v := r.PostForm[name]
+	//v := r.PostForm[name]
+	//
+	//if len(v) == 0 {
+	//	v = r.URL.Query()[name]
+	//}
+	//return v
+	v0 := r.PostFormValue(name)
 
-	if len(v) == 0 {
-		v = r.URL.Query()[name]
+	if v0 == "" {
+		return r.URL.Query()[name]
 	}
-	return v
+	return []string {v0}
 }
 
 func getHeader(name string, r *http.Request) []string {

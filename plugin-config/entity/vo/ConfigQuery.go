@@ -9,3 +9,7 @@ package vo
 //	NamespaceID string `name:"namespaceId"json:"namespaceId"`
 //	ConfigList []ConfigItem `name:"configList"json:"configList"`
 //}
+
+type ConfigMd5Data struct {
+	ListeningConfigs string `name:"Listening-Configs"json:"Listening-Configs"`
+}

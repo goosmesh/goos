@@ -7,9 +7,11 @@ import (
 	"fmt"
 	"github.com/goosmesh/goos/core/utils"
 	"github.com/goosmesh/goos/plugin-config/entity"
+	"github.com/goosmesh/goos/plugin-config/entity/vo"
 	"github.com/goosmesh/goos/plugin-config/longpolling"
 	utils2 "github.com/goosmesh/goos/plugin-config/longpolling/utils"
 	"github.com/goosmesh/goos/plugin-config/service"
+	"github.com/prometheus/common/log"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -186,7 +188,34 @@ func DeleteConfig(w http.ResponseWriter, r *http.Request) {
 //}
 // 基于md5的 long polling 配置变化监听
 func ConfigLongPollListener(w http.ResponseWriter, r *http.Request)  {
+
 	// get header long pulling metas
+
+	body, err := ioutil.ReadAll(r.Body)
+	log.Info(bytes.NewBuffer(body).String())
+
+	//fmt.Println(r.Header.Get("Content-Type"))
+	if err != nil {
+		resp := utils.Failed(err.Error())
+		if err := json.NewEncoder(w).Encode(resp); err != nil{
+			panic(err)
+		}
+	}
+	//else {
+	//	fmt.Println(bytes.NewBuffer(body).String())
+	//}
+
+	var configMd5Data vo.ConfigMd5Data
+
+	err = json.Unmarshal([]byte(bytes.NewBuffer(body).String()), &configMd5Data)
+	if err != nil {
+		resp := utils.Failed(err.Error())
+		if err := json.NewEncoder(w).Encode(resp); err != nil{
+			panic(err)
+		}
+		return
+	}
+
 
 	timeout, err := utils.GetInt64Header("Long-Pulling-Timeout", false, 30000, nil, r)
 	if err != nil {
@@ -204,12 +233,16 @@ func ConfigLongPollListener(w http.ResponseWriter, r *http.Request)  {
 		nh = true
 	}
 
-	probeModify, err := utils.GetParameter("Listening-Configs", false, "", nil, r)
-	if err != nil {
+	//probeModify, err := utils.GetParameter("Listening-Configs", false, "", nil, r)
+	//if err != nil {
+	//	_, _ = fmt.Fprint(w, "")
+	//	return
+	//}
+	if configMd5Data.ListeningConfigs == "" {
 		_, _ = fmt.Fprint(w, "")
 		return
 	}
-	probeModifyDecode, err := url.QueryUnescape(probeModify)
+	probeModifyDecode, err := url.QueryUnescape(configMd5Data.ListeningConfigs)
 	if err != nil {
 		_, _ = fmt.Fprint(w, "")
 		return
