@@ -22,10 +22,6 @@ var clients = list.New()
 // 3、加入到监听池，在配置文件变化时回调
 // 4、或超时
 func AddLongPolling(ctx context.Context, ch chan<- string, clientMd5Map map[string] string, noHangup bool) (exe func(), clientClose func()) {
-	select {
-	case <-ctx.Done():
-		close(ch)
-	}
 	exe = func() {
 		changed := utils.FilterChangedConfig(clientMd5Map)
 		if len(changed) != 0 {
@@ -46,6 +42,10 @@ func AddLongPolling(ctx context.Context, ch chan<- string, clientMd5Map map[stri
 				// 从监听列表移除
 				clients.Remove(ele)
 			}
+		}
+		select {
+		case <-ctx.Done():
+			close(ch)
 		}
 	}
 	return
