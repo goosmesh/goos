@@ -32,6 +32,10 @@ func ConfigMD5ToMap(md5Datas string) map[string] string {
 func ChangedConfigToResponse(data []string) string {
 	str := ""
 	for _, key := range data {
+		// 过滤掉 namespace为 *
+		if key[len(key) - 2:] == constants.WORD_SEPARATOR + "*" {
+			key = key[:len(key) - 2]
+		}
 		str += key + constants.LINE_SEPARATOR
 	}
 	return url.QueryEscape(str)

@@ -11,7 +11,6 @@ import (
 	"github.com/goosmesh/goos/plugin-config/longpolling"
 	utils2 "github.com/goosmesh/goos/plugin-config/longpolling/utils"
 	"github.com/goosmesh/goos/plugin-config/service"
-	"github.com/prometheus/common/log"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -192,7 +191,6 @@ func ConfigLongPollListener(w http.ResponseWriter, r *http.Request)  {
 	// get header long pulling metas
 
 	body, err := ioutil.ReadAll(r.Body)
-	log.Info(bytes.NewBuffer(body).String())
 
 	//fmt.Println(r.Header.Get("Content-Type"))
 	if err != nil {
