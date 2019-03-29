@@ -12,7 +12,6 @@ import (
 func GoosWorker()  {
 	// 初始化环境变量
 	log.Println("goos starting")
-	env.InitEnv()
 
 	life := GoosLifecycle{
 		GoosPlugins: &support_plugin.Plugins{},

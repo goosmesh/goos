@@ -8,7 +8,7 @@ import (
 
 func TestEncode(t *testing.T) {
 	fmt.Println(os.Getenv("HOME"))
-	password := "nacos"
+	password := "goos"
 	if encode, err := Encode(password); err != nil {
 		fmt.Println(err)
 	} else {

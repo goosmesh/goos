@@ -78,13 +78,16 @@ func GetConfig(id int64) (result interface{}, err error) {
 func GetConfigByQuery(dataId string, groupId string, namespaceId string) (result interface{}, err error) {
 	query := entity.Config{DataID: dataId, GroupID: groupId, }
 
-	var n int64 = 0
-	if ns, err := GetNamespaceByNamespaceId(namespaceId); err == nil {
-		n = ns.(entity.Namespace).Id
-	}
+	// namespace 不是通配符
+	if namespaceId != "" && namespaceId != "*" {
+		var n int64 = 0
+		if ns, err := GetNamespaceByNamespaceId(namespaceId); err == nil {
+			n = ns.(entity.Namespace).Id
+		}
 
-	if n > 0 {
-		query.NamespaceID = n
+		if n > 0 {
+			query.NamespaceID = n
+		}
 	}
 
 	if result, err := support_db.QueryOne((&orm.QueryWrapper{}).Entity(query)); err == nil {

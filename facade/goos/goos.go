@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/goosmesh/goos/core/env"
 	"github.com/goosmesh/goos/facade/goos/lifecycle"
 )
 
@@ -15,6 +16,8 @@ import (
 
 
 func init() {
+	env.InitEnv()
+
 	lifecycle.GoosWorker()
 
 	ch := make(chan string)

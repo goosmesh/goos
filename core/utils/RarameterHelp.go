@@ -34,7 +34,7 @@ func GetParameter(name string, nullAble bool, defaultValue string, w http.Respon
 					return "", errors.New("goos required parameter " + name)
 				}
 			} else {
-				return "", errors.New("goos required header " + name)
+				return "", errors.New("goos required parameter " + name)
 			}
 		} else {
 			return defaultValue, nil

@@ -170,7 +170,7 @@ func DeleteConfig(w http.ResponseWriter, r *http.Request) {
 
 
 
-
+///////////////////////////////////   sidecar api			/////////////////////////////
 ///////////////////////////////////   RSA CLIENT API      ///////////////////////////////
 
 //func longOperation(ctx context.Context, ch chan<- string) {
@@ -216,6 +216,10 @@ func ConfigLongPollListener(w http.ResponseWriter, r *http.Request)  {
 	}
 
 	clientMd5Map := utils2.ConfigMD5ToMap(probeModifyDecode)
+	if len(clientMd5Map) == 0 {
+		_, _ = fmt.Fprint(w, "")
+		return
+	}
 	fmt.Println(clientMd5Map)
 
 
@@ -288,7 +292,8 @@ func ConfigLongPollListener(w http.ResponseWriter, r *http.Request)  {
 //	}
 //}
 
-// 客户端获取配置文件API
+// 客户端获取配置文件API（core api）
+// 客户端根据 dataId, groupId, namespaceId 获取配置信息
 func GetConfigClient(w http.ResponseWriter, r *http.Request)  {
 	dataId, err := utils.GetParameter("dataId", false, "", w, r)
 	if err != nil {

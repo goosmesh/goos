@@ -22,7 +22,7 @@ func ConfigMD5ToMap(md5Datas string) map[string] string {
 		if line != "" {
 			items := strings.Split(line, constants.WORD_SEPARATOR)
 			if len(items) == 4 {
-				result[GenConfigKey(items[0], items[1], items[3])] = items[4]
+				result[GenConfigKey(items[0], items[1], items[2])] = items[3]
 			}
 		}
 	}

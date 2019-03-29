@@ -18,6 +18,8 @@ func init() {
 }
 
 func setup(c *caddy.Controller) error {
+	env.InitEnv()
+
 	err := goosParse(c)
 	if err != nil {
 		return plugin.Error(Name, err)
